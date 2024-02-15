@@ -3,4 +3,5 @@ export {
   getBaseEvaluator,
   getHeadersEvaluator,
   getHeightEvaluator,
+  puttingTotalPage,
 } from "./evaluators";

@@ -98,6 +98,7 @@ export function getBaseEvaluator(headerHeight: number, footerHeight: number) {
   const argument = { headerHeight, footerHeight };
   type ArgumentType = typeof argument;
 
+
   const pageFunc = ({ headerHeight, footerHeight }: ArgumentType) => {
     const header = document.getElementById("header");
     const footer = document.getElementById("footer");
@@ -134,6 +135,29 @@ export function getBaseEvaluator(headerHeight: number, footerHeight: number) {
   };
 
   return [pageFunc, argument] as [
+    pageFunc: typeof pageFunc,
+    argument: ArgumentType
+  ];
+}
+
+export async function puttingTotalPage(basePdfBuffer: Uint8Array) {
+  const doc = await PDFDocument.load(basePdfBuffer);
+  const argument = { pagesCount: doc.getPageCount() };
+  type ArgumentType = typeof argument;
+
+
+  const pageFunc = ({ pagesCount }: ArgumentType) => {
+    const totalPagesElementsOut = document.getElementsByClassName("totalPagesTest");
+
+    for (const element of totalPagesElementsOut) {
+      const newElement = element as HTMLElement;
+      newElement.textContent = pagesCount.toString();
+    }
+
+  }
+
+  return [doc, pageFunc, argument,] as [
+    doc: typeof doc,
     pageFunc: typeof pageFunc,
     argument: ArgumentType
   ];
@@ -234,9 +258,10 @@ export async function getHeadersEvaluator(basePdfBuffer: Uint8Array) {
     // fill title
     const titleElements = document.getElementsByClassName("title");
     setElementsValue(titleElements, document.title);
+    
   };
 
-  return [doc, pageFunc, argument] as [
+  return [doc, pageFunc, argument,] as [
     doc: typeof doc,
     pageFunc: typeof pageFunc,
     argument: ArgumentType
